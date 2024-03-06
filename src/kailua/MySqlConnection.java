@@ -13,12 +13,6 @@ public class MySqlConnection {
     private String password = "root";
     private Connection connection = null;
 
-
-    ArrayList<Car> allCars = new ArrayList<>();
-    ArrayList<Car> allSportsCars = new ArrayList<>();
-    ArrayList<Car> allFamilyCars = new ArrayList<>();
-    ArrayList<Car> allLuxuryCars = new ArrayList<>();
-
     public MySqlConnection() {
         createConnection();
     }
@@ -107,8 +101,9 @@ public class MySqlConnection {
         return customers;
     }
 
-    public void sortAllCars() {
+    public ArrayList<Car> getAllCars() {
 
+        ArrayList<Car> allCars = new ArrayList<>();
         String query = "SELECT * FROM cars_info";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();
@@ -118,28 +113,17 @@ public class MySqlConnection {
                 String brand = rs.getString("brand");
                 FuelType fuelType = FuelType.valueOf(rs.getString("fuel_type").toUpperCase());
                 String licensePlate = rs.getString("license_plate");
-                Date registration = Date.valueOf(rs.getString("registration"));
+                Date registration = rs.getDate("registration");
                 int odometer = rs.getInt("odometer");
                 CarType carType = CarType.valueOf(rs.getString("type_of_car").toUpperCase());
 
                 Car car = new Car(model, brand, fuelType, licensePlate, registration, odometer, carType);
                 allCars.add(car);
-
-                switch (car.getTypeOfCar()) {
-                    case SPORT:
-                        allSportsCars.add(car);
-                        break;
-                    case LUXURY:
-                        allLuxuryCars.add(car);
-                        break;
-                    case FAMILY:
-                        allFamilyCars.add(car);
-                        break;
-                }
             }
         } catch (SQLException e) {
             System.out.println("EXCEPTION: " + e.getMessage());
         }
+        return allCars;
     }
 
 
@@ -171,7 +155,7 @@ public class MySqlConnection {
         return customers;
     }
 
-    public void updateCustomerInfo ( int drivers_license_number, String field, String newValue) {
+    public void updateCustomerInfo(int drivers_license_number, String field, String newValue) {
         Connection conn = null;
         PreparedStatement pstmt = null;
         try {
@@ -199,17 +183,17 @@ public class MySqlConnection {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, car.getModel());
             preparedStatement.setString(2, car.getBrand());
-            preparedStatement.setString(3, car.getFuelType().toString());
+            preparedStatement.setString(3, car.getFuelType().toString().toLowerCase());
             preparedStatement.setString(4, car.getLicensePlate());
             preparedStatement.setDate(5, car.getRegistration());
             preparedStatement.setInt(6, car.getOdometer());
-            preparedStatement.setString(7, car.getTypeOfCar().toString());
+            preparedStatement.setString(7, car.getTypeOfCar().toString().toLowerCase());
 
             preparedStatement.executeUpdate();
 
             System.out.println("Car added successfully.");
         } catch (SQLException e) {
-            System.out.println("EXCEPTION: " + e.getStackTrace());
+            System.out.println("EXCEPTION: " + e.getMessage());
         }
 
     }
@@ -252,15 +236,86 @@ public class MySqlConnection {
         }
     }
 
-        public void closeConnection () {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                System.out.println(ConsoleColors.RUBY_RED + "EXCEPTION: " + e.getStackTrace() + ConsoleColors.RESET);
+   /* public ArrayList<LeaseContract> getAllContracts() {
+        String query = "select customer_id, odometer_start, license_plate, start_date, end_date, max_km, " +
+                "(select first_name  from customers where lease_contract.customer_id = customers.drivers_license_number ) as first_name, " +
+                "(select last_name  from customers where lease_contract.customer_id = customers.drivers_license_number )  as last_name from lease_contract ";
+        ArrayList<LeaseContract> contracts = new ArrayList<>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                int customerId = rs.getInt("customer_id");
+                int odometerStart = rs.getInt("odometer_start");
+                String licensePlate = rs.getString("license_plate");
+                Date startDate = Date.valueOf(rs.getString("start_date"));
+                Date endDate = Date.valueOf(rs.getString("end_date"));
+                int maxKm = rs.getInt("max_km");
+                String firstName = rs.getString("first_name");
+         tring lastName = rs.getString("last_name");
+
+
+                long phoneNr = rs.getLong("phone_number");
+                String email = rs.getString("email");
+                int driversLicenseNumber = rs.getInt("drivers_license_number");
+                Date driversLicenseIssueDate = rs.getDate("drivers_license_issue_date");
+                Customer customer = new Customer(firstName, lastName, address, zipCode, city, phoneNr, email,
+                        driversLicenseNumber, driversLicenseIssueDate);
+                customers.add(customer);
             }
-            connection = null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } return  contracts;
+    } */
+
+    public ArrayList<LeaseContract> getAllContracts() {
+        String query = "select lc.customer_id, lc.odometer_start, lc.license_plate, lc.start_date, lc.end_date, lc.max_km, " +
+                "c.first_name, c.last_name, c.phone_number, c.email, c.drivers_license_number, c.drivers_license_issue_date, c.address, c.zipCode, c.city " +
+                "from lease_contract lc " +
+                "join customers c on lc.customer_id = c.drivers_license_number";
+        ArrayList<LeaseContract> contracts = new ArrayList<>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                int customerId = rs.getInt("customer_id");
+                int odometerStart = rs.getInt("odometer_start");
+                String licensePlate = rs.getString("license_plate");
+                Date startDate = Date.valueOf(rs.getString("start_date"));
+                Date endDate = Date.valueOf(rs.getString("end_date"));
+                int maxKm = rs.getInt("max_km");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                long phoneNr = rs.getLong("phone_number");
+                String email = rs.getString("email");
+                int driversLicenseNumber = rs.getInt("drivers_license_number");
+                Date driversLicenseIssueDate = rs.getDate("drivers_license_issue_date");
+                String address = rs.getString("address");
+                int zipCode = rs.getInt("zipCode");
+                String city = rs.getString("city");
+
+                Customer customer = new Customer(firstName, lastName, address, zipCode, city, phoneNr, email,
+                        driversLicenseNumber, driversLicenseIssueDate);
+                LeaseContract contract = new LeaseContract(customerId, odometerStart, licensePlate, startDate, endDate, maxKm);
+                contracts.add(contract);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+        return contracts;
     }
+
+    public void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println(ConsoleColors.RUBY_RED + "EXCEPTION: " + e.getStackTrace() + ConsoleColors.RESET);
+        }
+        connection = null;
+    }
+}
 
 
 

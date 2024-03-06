@@ -1,7 +1,5 @@
 package kailua;
 
-import com.mysql.cj.callback.UsernameCallback;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.sql.Date;
@@ -40,76 +38,98 @@ public class Kailua {
     }
 
     private MenuChoice showContractMenu() {
-        System.out.println(ConsoleColors.DARK_MAGENTA + "\nCONTRACT MENU\n" +
+        System.out.println(ConsoleColors.LIGHT_GOLD + "\nCONTRACT MENU\n" +
                 "1. Create Contract\n" +
                 "2. Show all Contracts\n" + "3. Delete contract \n" +
-                "Q. Quit\n" + ConsoleColors.RESET);
+                "9. Quit\n" + ConsoleColors.RESET);
 
-        char choice = in.nextLine().toLowerCase().charAt(0);
+        int choice = in.nextInt();
         MenuChoice menuChoice = null;
         switch (choice) {
-            case '1' -> menuChoice = MenuChoice.CREATE_CONTRACT;
-            case '2' -> menuChoice = MenuChoice.SHOW_ALL_CONTRACTS;
-            case '3' -> menuChoice = MenuChoice.DELETE_CONTRACT;
-            case 'q' -> menuChoice = MenuChoice.QUIT;
+            case 1 -> createContract();
+            case 2 -> showAllContracts();
+         //   case 3 -> deleteContract();
+         //   case 9 -> running -> false;
         }
         return menuChoice;
 
     }
+     public  void printContracts (ArrayList<LeaseContract> leaseContracts ) {
+         for (LeaseContract l : leaseContracts) {
+             System.out.println(l);
+
+         }
+     }
+    private void showAllContracts() {
+        printContracts(mySqlConnection.getAllContracts());
+    }
+
+    private void createContract() {
+       //todo Create contract method
+    }
 
 
     private void showCarMenu() {
-        System.out.println(ConsoleColors.DARK_MAGENTA + "\nCAR MENU\n" + "1. Add new car.\n" +
-                "2. Delete car from system.\n" + "3. Update car.\n" + "Q. Quit\n" + ConsoleColors.RESET);
+        System.out.println(ConsoleColors.LIGHT_GOLD + "\nCAR MENU\n" + "1. Add new car.\n" +
+                "2. Delete car from system.\n" + "3. Update car.\n" + "4. Show list of all cars.\n" +
+                "5. Show list of all family cars.\n" + "6. Show list of all luxury cars.\n" +
+                "7. Show list of all sports cars.\n" + "9. Quit\n" + ConsoleColors.RESET);
 
-        char choice = in.nextLine().toLowerCase().charAt(0);
+        int choice = in.nextInt();
         MenuChoice menuChoice = null;
         switch (choice) {
-            case '1' -> createCar();
-            case '2' -> deleteCar();
-            case '3' -> updateCarOdomoter();
-            case 'q' -> running = false;
+            case 1 -> createCar();
+            case 2 -> deleteCar();
+            case 3 -> updateCarOdomoter();
+            case 4 -> printAllCars();
+            case 5 -> printAllFamilyCars();
+            case 6 -> printAllLuxuryCars();
+            case 7 -> printAllSportCars();
+            case 9 -> running = false;
         }
     }
 
     private void showCustomerMenu() {
-        System.out.println(ConsoleColors.DARK_MAGENTA + "\nMAIN MENU\n" +
+        System.out.println(ConsoleColors.LIGHT_GOLD + "\nMAIN MENU\n" +
                 "1. Create customer\n" +
                 "2. Show all customers\n" + "3. Delete customer by id\n" + "4. Search by customer id\n" + "5. Update Customer \n" +
-                "Q. Quit\n" + ConsoleColors.RESET);
+                "9. Quit\n" + ConsoleColors.RESET);
 
-        char choice = in.nextLine().toLowerCase().charAt(0);
+        int choice = in.nextInt();
 
         switch (choice) {
-            case '1' -> createCustomer();
-            case '2' -> showAllCustomers();
-            case '3' -> deleteCustomerById();
-            case '4' -> searchByCustomerId();
-            case '5' -> updateCarOdomoter();
-            case 'q' -> running = false;
+            case 1 -> createCustomer();
+            case 2 -> showAllCustomers();
+            case 3 -> deleteCustomerById();
+            case 4 -> searchByCustomerId();
+            case 5 -> updateCustomerInfo();
+            case 9 -> running = false;
         }
     }
 
 
+
     private MainMenuChoice showMainMenu() {
-        System.out.println(ConsoleColors.DARK_MAGENTA + "\nMAIN MENU\n" +
-                "1 CAR MENU\n" +
+        System.out.println(ConsoleColors.LIGHT_GOLD + "\nMAIN MENU\n" +
+                "1. CAR MENU\n" +
                 "2. CUSTOMER MENU \n" +
                 "3. CONTRACT MENU \n" +
-                "Q. Quit\n" + ConsoleColors.RESET);
+                "9. Quit\n" + ConsoleColors.RESET);
 
-        char choice = in.nextLine().toLowerCase().charAt(0);
+        int choice = in.nextInt();
         MainMenuChoice mainMenuChoice = null;
         switch (choice) {
-            case '1' -> mainMenuChoice = MainMenuChoice.CAR_MENU;
-            case '2' -> mainMenuChoice = MainMenuChoice.CUSTOMER_MENU;
-            case '3' -> mainMenuChoice = MainMenuChoice.CONTRACT_MENU;
-            case 'q' -> mainMenuChoice = MainMenuChoice.QUIT;
+            case 1 -> mainMenuChoice = MainMenuChoice.CAR_MENU;
+            case 2 -> mainMenuChoice = MainMenuChoice.CUSTOMER_MENU;
+            case 3 -> mainMenuChoice = MainMenuChoice.CONTRACT_MENU;
+            case 9 -> mainMenuChoice = MainMenuChoice.QUIT;
         }
         return mainMenuChoice;
     }
 
     /////CUSTOMER METHODS/////
+    private void updateCustomerInfo() {
+        }
 
 
     private void searchByCustomerId() {
@@ -132,6 +152,45 @@ public class Kailua {
     private void showAllCustomers() {
         ArrayList<Customer> customers = mySqlConnection.getAllCustomers();
         printCustomer(customers);
+    }
+    private void printAllCars(){
+        ArrayList<Car> allCars = mySqlConnection.getAllCars();
+        printCar(allCars);
+    }
+    private void printCar(ArrayList<Car> allCars){
+
+            for (Car c: allCars             ) {
+            System.out.println(c);
+        }
+    }
+
+    public void printAllFamilyCars() {
+        ArrayList<Car> allCars = mySqlConnection.getAllCars();
+        for (Car car : allCars ) {
+            if (car.getTypeOfCar() == CarType.FAMILY) {
+            System.out.println(car);
+             }
+        }
+    }
+
+    public void printAllSportCars() {
+                ArrayList<Car> allCars = mySqlConnection.getAllCars();
+                for (Car car : allCars ) {
+
+                    if (car.getTypeOfCar() == CarType.SPORT) {
+                        System.out.println(car);
+                    }
+                }
+    }
+
+    public void printAllLuxuryCars() {
+            ArrayList<Car> allCars = mySqlConnection.getAllCars();
+            for (Car car : allCars ) {
+
+                if (car.getTypeOfCar() == CarType.LUXURY) {
+                    System.out.println(car);
+                }
+            }
     }
 
     private void printCustomer(ArrayList<Customer> customers) {
@@ -219,10 +278,12 @@ public class Kailua {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         System.out.println("\nCREATE CAR");
         System.out.println("Model: ");
+        in.nextLine();
         String model = in.nextLine();
         System.out.println("Brand: ");
         String brand = in.nextLine();
-        FuelType fueltype = chooseFuelType();
+        FuelType fuelType = chooseFuelType();
+        in.nextLine(); // scanner bug
         System.out.println("License Plate: ");
         String licensePlate = in.nextLine();
         System.out.println("Registration date: (dd-MM-yyyy) ");
@@ -233,7 +294,7 @@ public class Kailua {
         int odometer = in.nextInt();
         CarType carType = chooseCarType();
 
-        return new Car(model, brand, fueltype, licensePlate, registrationDateSql, odometer, carType);
+        return new Car(model, brand, fuelType, licensePlate, registrationDateSql, odometer, carType);
     }
 
 
@@ -247,9 +308,9 @@ public class Kailua {
         int userInput = in.nextInt();
 
         switch (userInput) {
-            case '1' -> fuelType = FuelType.GASOLINE;
-            case '2' -> fuelType = FuelType.DIESEL;
-            case '3' -> fuelType = FuelType.ELECTRIC;
+            case 1 -> fuelType = FuelType.GASOLINE;
+            case 2 -> fuelType = FuelType.DIESEL;
+            case 3 -> fuelType = FuelType.ELECTRIC;
 
         }
         return fuelType;
@@ -265,15 +326,16 @@ public class Kailua {
         int userInput = in.nextInt();
 
         switch (userInput) {
-            case '1' -> carType = CarType.FAMILY;
-            case '2' -> carType = CarType.LUXURY;
-            case '3' -> carType = CarType.SPORT;
+            case 1 -> carType = CarType.FAMILY;
+            case 2 -> carType = CarType.LUXURY;
+            case 3 -> carType = CarType.SPORT;
         }
 
         return carType;
     }
 
     private void deleteCar() {
+        in.nextLine(); //scanner bug
         System.out.println("Enter the licence plate you want to delete:");
         String licensePlate = in.nextLine();
         mySqlConnection.deleteCar(licensePlate);
