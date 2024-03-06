@@ -101,9 +101,9 @@ public class Customer {
     }
 
     @Override
-    public String toString() {
+    public String toString() { //todo format
         return ConsoleColors.ORANGE + "Name: " +firstName + " " + lastName +
-                " Adress: "+ address + " " + zipCode +  " " +  city +
+                " Address: "+ address + " " + zipCode +  " " +  city +
                 " Phone and email: " + phoneNr + eMail +
                 " Drivers licence: Number:" + driversLicenseNumber + " Issue date:" + driversLicenseIssueDate +
                 ConsoleColors.RESET;
