@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class MySqlConnection {
     private String database = "jdbc:mysql://localhost:3306/kailua";
     private String username = "otto";
-    private String password = "EnterPassHere";
+    private String password = "root";
     private Connection connection = null;
 
     public MySqlConnection() {
@@ -193,7 +193,6 @@ public class MySqlConnection {
         } catch (SQLException e) {
             System.out.println("EXCEPTION: " + e.getMessage());
         }
-
     }
 
     public void deleteCar(String licensePlate) {
