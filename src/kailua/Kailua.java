@@ -111,7 +111,7 @@ public class Kailua {
         switch (choice) {
             case 1 -> createCar();
             case 2 -> deleteCar();
-            case 3 -> updateCarOdomoter();
+            case 3 -> updateCarOdometer();
             case 4 -> printAllCars();
             case 5 -> printAllFamilyCars();
             case 6 -> printAllLuxuryCars();
@@ -380,7 +380,7 @@ public class Kailua {
         mySqlConnection.deleteCar(licensePlate);
     }
 
-    private void updateCarOdomoter() {
+    private void updateCarOdometer() {
         in.nextLine(); //scanner bug
         System.out.println("Enter the licence plate: ");
         String licensePlate = in.nextLine();
@@ -389,8 +389,3 @@ public class Kailua {
         mySqlConnection.updateCarOdometer(licensePlate, odometer);
     }
 }
-
-
-
-
-

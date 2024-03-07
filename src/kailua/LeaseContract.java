@@ -70,13 +70,13 @@ public class LeaseContract {
 
     @Override
     public String toString() {
-        return "LeaseContract{" +
-                "customer_ID=" + customer_ID +
-                ", odometer_start=" + odometer_start +
-                ", license_plate='" + license_plate + '\'' +
-                ", start_time=" + start_time +
-                ", end_time=" + end_time +
-                ", max_km=" + max_km +
-                '}';
+        String orange = ConsoleColors.ORANGE;
+        String aqua = ConsoleColors.AQUA;
+
+        return ConsoleColors.ORANGE + "LeaseContract: " + "Customer ID: " + aqua + customer_ID +"."+ orange+
+                " Odometer at the start " + aqua + odometer_start + "."+  orange +" Licence plate: " +aqua+
+                license_plate +"."+ orange+ " Start time of contract. " + aqua + start_time+"." + orange +
+                " Finished time of contract. " +aqua+ end_time + orange+"."+" Maximum amount of kilometers: " +
+                aqua+ max_km + "."+ConsoleColors.RESET;
     }
 }

@@ -1,11 +1,9 @@
 package kailua;
 
-
 import java.io.Console;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-
 
 public class MySqlConnection {
     private String database = "jdbc:mysql://localhost:3306/kailua";
@@ -49,7 +47,7 @@ public class MySqlConnection {
 
             System.out.println("Customer added successfully.");
         } catch (SQLException e) {
-            System.out.println(ConsoleColors.RUBY_RED + "EXCEPTION: " + e.getStackTrace() + ConsoleColors.RESET);
+            System.out.println(ConsoleColors.BLOOD_RED + "EXCEPTION: " + e.getStackTrace() + ConsoleColors.RESET);
         }
     }
 
@@ -63,12 +61,12 @@ public class MySqlConnection {
             int rowsAffected = preparedStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                System.out.println("Customer deleted successfully.");
+                System.out.println(ConsoleColors.LIME+"Customer deleted successfully."+ConsoleColors.RESET);
             } else {
-                System.out.println("Customer with ID " + id + " not found.");
+                System.out.println(ConsoleColors.BLOOD_RED+"Customer with ID " + id + " not found."+ConsoleColors.RESET);
             }
         } catch (SQLException e) {
-            System.out.println(ConsoleColors.RUBY_RED + "ERROR: " + "Customer is part of a leasing contract and " +
+            System.out.println(ConsoleColors.BLOOD_RED + "ERROR: " + "Customer is part of a leasing contract and " +
                     "cannot be deleted!" + ConsoleColors.RESET);
         }
     }
@@ -121,7 +119,7 @@ public class MySqlConnection {
                 allCars.add(car);
             }
         } catch (SQLException e) {
-            System.out.println("EXCEPTION: " + e.getMessage());
+            System.out.println(ConsoleColors.BLOOD_RED+"EXCEPTION: " + e.getMessage()+ConsoleColors.RESET);
         }
         return allCars;
     }
@@ -163,9 +161,9 @@ public class MySqlConnection {
             pstmt.setInt(2, drivers_license_number);
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("Customer updated.");
+                System.out.println(ConsoleColors.LIME+"Customer successfully updated."+ConsoleColors.RESET);
             } else {
-                System.out.println("No Customer found with the provided ID");
+                System.out.println(ConsoleColors.BLOOD_RED+"No Customer found with the provided ID"+ConsoleColors.RESET);
             }
         } catch (SQLException se) {
             se.printStackTrace();
@@ -189,9 +187,9 @@ public class MySqlConnection {
 
             preparedStatement.executeUpdate();
 
-            System.out.println("Car added successfully.");
+            System.out.println(ConsoleColors.LIME+"Car added successfully."+ConsoleColors.RESET);
         } catch (SQLException e) {
-            System.out.println("EXCEPTION: " + e.getMessage());
+            System.out.println(ConsoleColors.BLOOD_RED+"EXCEPTION: " + e.getMessage()+ConsoleColors.RESET);
         }
     }
 
@@ -203,14 +201,15 @@ public class MySqlConnection {
             int rowsAffected = preparedStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                System.out.println("Car deleted successfully.");
+                System.out.println(ConsoleColors.LIME+"Car deleted successfully."+ConsoleColors.RESET);
             } else {
-                System.out.println("Car with License plate " + licensePlate + " not found.");
+                System.out.println(ConsoleColors.BLOOD_RED+"Car with License plate " + licensePlate +
+                        " not found."+ConsoleColors.RESET);
 
             }
 
         } catch (SQLException e) {
-            System.out.println(ConsoleColors.RUBY_RED + "ERROR: " + "License plate is part of a leasing contract" +
+            System.out.println(ConsoleColors.BLOOD_RED + "ERROR: " + "License plate is part of a leasing contract" +
                     " and cannot be deleted!" + ConsoleColors.RESET);
         }
     }
@@ -224,9 +223,9 @@ public class MySqlConnection {
             preparedStatement.setString(2, licensePlate);
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("Car updated.");
+                System.out.println(ConsoleColors.LIME+"Car updated."+ConsoleColors.RESET);
             } else {
-                System.out.println("No car found with the provided license plate");
+                System.out.println(ConsoleColors.BLOOD_RED+"No car found with the provided license plate"+ConsoleColors.RESET);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -246,9 +245,9 @@ public class MySqlConnection {
 
             preparedStatement.executeUpdate();
 
-            System.out.println("Contract added successfully.");
+            System.out.println(ConsoleColors.LIME+"Contract added successfully."+ConsoleColors.RESET);
         } catch (SQLException e) {
-            System.out.println(ConsoleColors.RUBY_RED + "EXCEPTION: " + e.getStackTrace() + ConsoleColors.RESET);
+            System.out.println(ConsoleColors.BLOOD_RED + "EXCEPTION: " + e.getStackTrace() + ConsoleColors.RESET);
         }
     }
 
@@ -298,12 +297,12 @@ public class MySqlConnection {
             int rowsAffected = preparedStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                System.out.println("Contract deleted successfully.");
+                System.out.println(ConsoleColors.LIME+"Contract deleted successfully."+ConsoleColors.RESET);
             } else {
-                System.out.println("Contract with ID " + id + " not found.");
+                System.out.println(ConsoleColors.BLOOD_RED+"Contract with ID " + id + " not found."+ConsoleColors.RESET);
             }
         } catch (SQLException e) {
-            System.out.println(ConsoleColors.RUBY_RED + "ERROR: " + "Contact is part of a leasing contract and " +
+            System.out.println(ConsoleColors.BLOOD_RED + "ERROR: " + "Contact is part of a leasing contract and " +
                     "cannot be deleted!" + ConsoleColors.RESET);
         }
     }
@@ -313,7 +312,7 @@ public class MySqlConnection {
         try {
             connection.close();
         } catch (SQLException e) {
-            System.out.println(ConsoleColors.RUBY_RED + "EXCEPTION: " + e.getStackTrace() + ConsoleColors.RESET);
+            System.out.println(ConsoleColors.BLOOD_RED + "EXCEPTION: " + e.getStackTrace() + ConsoleColors.RESET);
         }
         connection = null;
     }

@@ -101,11 +101,14 @@ public class Customer {
     }
 
     @Override
-    public String toString() { //todo format
-        return ConsoleColors.ORANGE + "Name: " +firstName + " " + lastName +
-                " Address: "+ address + " " + zipCode +  " " +  city +
-                " Phone and email: " + phoneNr + eMail +
-                " Drivers licence: Number:" + driversLicenseNumber + " Issue date:" + driversLicenseIssueDate +
-                ConsoleColors.RESET;
+    public String toString() {
+        String orange = ConsoleColors.ORANGE;
+        String aqua = ConsoleColors.AQUA;
+
+        return orange + "Name: " + aqua+firstName + " " + lastName +"."+orange+
+                " Address: "+aqua+ address + ", " + zipCode +  ", " +  city + "."+ orange+
+                " Phone and email: " +aqua +phoneNr +", " + eMail+"." + orange+
+                " Drivers licence: Number: " +  aqua+driversLicenseNumber +"."+ orange +
+                " Issue date: " + aqua +driversLicenseIssueDate + "."+ ConsoleColors.RESET;
     }
 }
