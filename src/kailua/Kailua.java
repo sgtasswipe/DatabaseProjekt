@@ -48,7 +48,7 @@ public class Kailua {
         switch (choice) {
             case 1 -> createContract();
             case 2 -> showAllContracts();
-         //   case 3 -> deleteContract();
+            case 3 -> deleteContract();
          //   case 9 -> running -> false;
         }
         return menuChoice;
@@ -65,9 +65,40 @@ public class Kailua {
     }
 
     private void createContract() {
-     mySqlConnection.createContract();
+        LeaseContract leaseContract = userCreatesContract();
+     mySqlConnection.addContract(leaseContract);
+    }
+    public void deleteContract() {
+        System.out.println("This will deleted all contracts with associated ID");
+        System.out.println("Enter the contract id you want to delete:");
+        int id = in.nextInt();
+        mySqlConnection.deleteContract(id);
     }
 
+    private LeaseContract userCreatesContract() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        System.out.println("Enter customer id");
+        int id = in.nextInt();
+        System.out.println("Enter odometer start value");
+        int odometerStart = in.nextInt();
+        in.nextLine(); // scanner bug
+        System.out.println("Enter license plate");
+        String plate = in.nextLine();
+        System.out.println("Enter Start date in format DD-mm-YYYY");
+        String startDateStr = in.nextLine();
+        LocalDate startDateLocal = LocalDate.parse(startDateStr, formatter);
+        Date sqlStartDate = Date.valueOf(startDateLocal);
+        System.out.println("Enter End date in format DD-mm-YYYY");
+        String endDateStr = in.nextLine();
+        LocalDate endDateLocal = LocalDate.parse(endDateStr, formatter);
+        Date sqlEndDate = Date.valueOf(endDateLocal);
+        System.out.println("Enter max Km For given contract");
+        int maxKm = in.nextInt();
+
+        LeaseContract leaseContract = new LeaseContract(id,odometerStart,plate,sqlStartDate,sqlEndDate,maxKm);
+        return  leaseContract;
+
+    }
 
     private void showCarMenu() {
         System.out.println(ConsoleColors.LIGHT_GOLD + "\nCAR MENU\n" + "1. Add new car.\n" +
@@ -215,7 +246,7 @@ public class Kailua {
 
     private Customer userCreatesCustomer() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
+        in.nextLine(); // scanner bug
         System.out.println("\nCREATE CUSTOMER");
         System.out.print("First name: ");
         String firstName = in.nextLine();
@@ -231,7 +262,6 @@ public class Kailua {
         System.out.print("Phone Number: ");
         int phoneNr = in.nextInt();
         in.nextLine(); // ScannerBug
-        System.out.print("Email: ");
         String email = typeEmailAddress();
         System.out.print("Driver license number: ");
         int driversLicenseNumber = in.nextInt();
@@ -351,6 +381,7 @@ public class Kailua {
     }
 
     private void updateCarOdomoter() {
+        in.nextLine(); //scanner bug
         System.out.println("Enter the licence plate: ");
         String licensePlate = in.nextLine();
         System.out.println("Kilometers driven: ");

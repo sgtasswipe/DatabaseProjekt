@@ -67,4 +67,16 @@ public class LeaseContract {
     public void setMax_km(int max_km) {
         this.max_km = max_km;
     }
+
+    @Override
+    public String toString() {
+        return "LeaseContract{" +
+                "customer_ID=" + customer_ID +
+                ", odometer_start=" + odometer_start +
+                ", license_plate='" + license_plate + '\'' +
+                ", start_time=" + start_time +
+                ", end_time=" + end_time +
+                ", max_km=" + max_km +
+                '}';
+    }
 }

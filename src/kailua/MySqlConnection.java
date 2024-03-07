@@ -233,7 +233,7 @@ public class MySqlConnection {
         }
     }
     public void addContract(LeaseContract leaseContract) {
-        String query = "INTERT INTO lease_contract (customer_id, odometer_start, license_plate, start_date, end_date, max_km) VALUES (?, ?, ?, ?, ?, ?) ";
+        String query = "INSERT INTO lease_contract (customer_id, odometer_start, license_plate, start_date, end_date, max_km) VALUES (?, ?, ?, ?, ?, ?) ";
         try {
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -267,8 +267,8 @@ public class MySqlConnection {
                 int customerId = rs.getInt("customer_id");
                 int odometerStart = rs.getInt("odometer_start");
                 String licensePlate = rs.getString("license_plate");
-                Date startDate = Date.valueOf(rs.getString("start_date"));
-                Date endDate = Date.valueOf(rs.getString("end_date"));
+                Date startDate = rs.getDate("start_date");
+                Date endDate = rs.getDate("end_date");
                 int maxKm = rs.getInt("max_km");
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
@@ -290,6 +290,24 @@ public class MySqlConnection {
         }
         return contracts;
     }
+    public void deleteContract(int id) {
+        String query = "DELETE FROM lease_contract WHERE customer_id = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, id);
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Contract deleted successfully.");
+            } else {
+                System.out.println("Contract with ID " + id + " not found.");
+            }
+        } catch (SQLException e) {
+            System.out.println(ConsoleColors.RUBY_RED + "ERROR: " + "Contact is part of a leasing contract and " +
+                    "cannot be deleted!" + ConsoleColors.RESET);
+        }
+    }
+
 
     public void closeConnection() {
         try {
