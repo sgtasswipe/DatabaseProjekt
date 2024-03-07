@@ -65,7 +65,7 @@ public class Kailua {
     }
 
     private void createContract() {
-       //todo Create contract method
+     mySqlConnection.createContract();
     }
 
 
@@ -129,6 +129,15 @@ public class Kailua {
 
     /////CUSTOMER METHODS/////
     private void updateCustomerInfo() {
+        System.out.println("Enter ID / license number for the customer you want to update");
+        int Id = in.nextInt();
+        in.nextLine(); // scanner bug
+        System.out.println("Please enter which field you want to update (first_name, last_name, address.)");
+        String field = in.nextLine();
+        System.out.println("Please enter the new value");
+        String newValue = in.nextLine();
+        mySqlConnection.updateCustomerInfo(Id,field,newValue);
+
         }
 
 

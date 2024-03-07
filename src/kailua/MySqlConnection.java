@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class MySqlConnection {
     private String database = "jdbc:mysql://localhost:3306/kailua";
     private String username = "otto";
-    private String password = "root";
+    private String password = "EnterPassHere";
     private Connection connection = null;
 
     public MySqlConnection() {
@@ -156,11 +156,9 @@ public class MySqlConnection {
     }
 
     public void updateCustomerInfo(int drivers_license_number, String field, String newValue) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
         try {
             String query = "UPDATE Customers SET " + field + " = ? WHERE drivers_license_number = ?";
-            pstmt = conn.prepareStatement(query);
+             PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, newValue);
             pstmt.setInt(2, drivers_license_number);
             int affectedRows = pstmt.executeUpdate();
@@ -235,39 +233,26 @@ public class MySqlConnection {
             throw new RuntimeException(e);
         }
     }
-
-   /* public ArrayList<LeaseContract> getAllContracts() {
-        String query = "select customer_id, odometer_start, license_plate, start_date, end_date, max_km, " +
-                "(select first_name  from customers where lease_contract.customer_id = customers.drivers_license_number ) as first_name, " +
-                "(select last_name  from customers where lease_contract.customer_id = customers.drivers_license_number )  as last_name from lease_contract ";
-        ArrayList<LeaseContract> contracts = new ArrayList<>();
-
+    public void addContract(LeaseContract leaseContract) {
+        String query = "INTERT INTO lease_contract (customer_id, odometer_start, license_plate, start_date, end_date, max_km) VALUES (?, ?, ?, ?, ?, ?) ";
         try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            while (rs.next()) {
-                int customerId = rs.getInt("customer_id");
-                int odometerStart = rs.getInt("odometer_start");
-                String licensePlate = rs.getString("license_plate");
-                Date startDate = Date.valueOf(rs.getString("start_date"));
-                Date endDate = Date.valueOf(rs.getString("end_date"));
-                int maxKm = rs.getInt("max_km");
-                String firstName = rs.getString("first_name");
-         tring lastName = rs.getString("last_name");
 
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, leaseContract.getCustomer_ID());
+            preparedStatement.setInt(2, leaseContract.getOdometer_start());
+            preparedStatement.setString(3, leaseContract.getLicense_plate());
+            preparedStatement.setDate(4, leaseContract.getStart_time());
+            preparedStatement.setDate(5, leaseContract.getEnd_time());
+            preparedStatement.setInt(6, leaseContract.getMax_km());
 
-                long phoneNr = rs.getLong("phone_number");
-                String email = rs.getString("email");
-                int driversLicenseNumber = rs.getInt("drivers_license_number");
-                Date driversLicenseIssueDate = rs.getDate("drivers_license_issue_date");
-                Customer customer = new Customer(firstName, lastName, address, zipCode, city, phoneNr, email,
-                        driversLicenseNumber, driversLicenseIssueDate);
-                customers.add(customer);
-            }
+            preparedStatement.executeUpdate();
+
+            System.out.println("Contract added successfully.");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } return  contracts;
-    } */
+            System.out.println(ConsoleColors.RUBY_RED + "EXCEPTION: " + e.getStackTrace() + ConsoleColors.RESET);
+        }
+    }
+
 
     public ArrayList<LeaseContract> getAllContracts() {
         String query = "select lc.customer_id, lc.odometer_start, lc.license_plate, lc.start_date, lc.end_date, lc.max_km, " +
